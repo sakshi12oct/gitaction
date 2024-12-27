@@ -26,3 +26,14 @@ jobs:
       run: |
         cd code
         python -m pytest addition.py
+    - name: SonarQube Analysis
+      run: |
+        mvn sonar:sonar \
+          -Dsonar.host.url=http://54.208.229.184:9000 \
+          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: ./dist/*.tar.gz
