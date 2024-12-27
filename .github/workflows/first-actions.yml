@@ -31,18 +31,8 @@ jobs:
           python setup.py sdist bdist_wheel
       - name: Run tests
         run: |
-          cd src
+          cd code
           python -m pytest addition.py
 
-      - name: Run SonarQube analysis
-        run: |
-          curl -u $SONARQUBE_TOKEN: $SONARQUBE_URL
-          mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: python-artifact
-          path: ./dist/*.tar.gz  # Adjust the path if needed based on your output directory
 
  
