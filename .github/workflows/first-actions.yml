@@ -26,6 +26,20 @@ jobs:
       run: |
         cd code
         python -m pytest addition.py
+
+      # Step 4: Package Python code as an artifact
+    - name: Create Artifact
+      run: |
+          mkdir -p artifact
+          cp -r * artifact/  # Copy all files to the artifact folder
+          echo "Packaged Python code for artifact publishing."
+
+      # Step 5: Upload the artifact
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+          name: python-code-artifact
+          path: artifact
     
 
   
