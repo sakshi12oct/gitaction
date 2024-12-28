@@ -47,6 +47,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      
+    - name: Download Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: python-code-artifact
 
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
