@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: Build and analyze
-    runs-on: [self-hosted, Linux, X64]
+    runs-on: self-hosted
 
     
     steps:
