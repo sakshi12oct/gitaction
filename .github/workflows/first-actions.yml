@@ -31,8 +31,10 @@ jobs:
     - name: Create Artifact
       run: |
         mkdir -p artifact
+        cp -r code/* artifact/
+        cp -r requirements.txt artifact/  # If you have a requirements file
         # Copy all files except the 'artifact' directory
-        find . -maxdepth 1 ! -name 'artifact' ! -name '.git' -exec cp -r {} artifact/ \;
+        #find . -maxdepth 1 ! -name 'artifact' ! -name '.git' -exec cp -r {} artifact/ \;
         echo "Packaged Python code for artifact publishing."
 
     - name: Upload Artifact
