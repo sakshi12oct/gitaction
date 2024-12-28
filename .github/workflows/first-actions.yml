@@ -12,6 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -27,24 +28,51 @@ jobs:
         cd code
         python -m pytest addition.py
 
-      # Step 4: Package Python code as an artifact
     - name: Create Artifact
       run: |
-          mkdir -p artifact
-          # Copy all files except the 'artifact' directory
-          find . -maxdepth 1 ! -name 'artifact' ! -name '.git' -exec cp -r {} artifact/ \;
-          echo "Packaged Python code for artifact publishing."
+        mkdir -p artifact
+        # Copy all files except the 'artifact' directory
+        find . -maxdepth 1 ! -name 'artifact' ! -name '.git' -exec cp -r {} artifact/ \;
+        echo "Packaged Python code for artifact publishing."
 
-      # Step 5: Upload the artifact
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
-          name: python-code-artifact
-          path: artifact
-    
+        name: python-code-artifact
+        path: artifact
 
-  
-      
+  deploy:
+    runs-on: self-hosted  # Run on your self-hosted runner
+    needs: build
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: 'us-east-1'
 
- 
+    - name: Set up SSH private key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/my-key.pem
+        chmod 600 ~/.ssh/my-key.pem  # Set appropriate permissions for the private key
+
+    - name: Deploy code to EC2
+      run: |
+        # Copy the artifact to EC2 instance using scp with the private key
+        scp -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ec2-user/app
+
+        # SSH into the EC2 instance to install dependencies and start the app
+        ssh -i ~/.ssh/my-key.pem ubuntu@10.0.1.207 << 'EOF'
+          cd /home/ubuntu/app
+          # Install dependencies if not already installed
+          python -m pip install --upgrade pip
+          pip install pytest
+          # Start the Python app (adjust the command as needed)
+          nohup python code/addition.py &
+          echo "Application started."
+        EOF
