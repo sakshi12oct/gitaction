@@ -31,6 +31,8 @@ jobs:
     - name: Create Artifact
       run: |
         mkdir -p artifact
+        # Copy the 'addition.py' file and other necessary files into the artifact directory
+        cp addition.py artifact/  # Copy 'addition.py' file
         cp -r code/* artifact/
         #cp -r requirements.txt artifact/  # If you have a requirements file
         # Copy all files except the 'artifact' directory
