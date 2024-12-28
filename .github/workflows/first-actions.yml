@@ -31,8 +31,8 @@ jobs:
     - name: Create Artifact
       run: |
           mkdir -p artifact
-          shopt -s dotglob  # Allow hidden files to be copied
-          cp -r !(artifact) artifact/  # Copy everything except the 'artifact' directory
+          # Copy all files except the 'artifact' directory
+          find . -maxdepth 1 ! -name 'artifact' -exec cp -r {} artifact/ \;
           echo "Packaged Python code for artifact publishing."
 
       # Step 5: Upload the artifact
