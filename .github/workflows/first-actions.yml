@@ -60,10 +60,11 @@ jobs:
         
     - name: Verify Downloaded Artifact
       run: |
+        # List the contents of the current directory to verify the artifact is downloaded
         echo "Listing files after artifact download"
         ls -al
-        echo "Listing the downloaded artifact contents"
-        ls -al python-code-artifact/  # This will show the contents of the artifact directory
+        echo "Listing contents of the downloaded artifact"
+        ls -al  # This will show the contents of the artifact files
 
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
