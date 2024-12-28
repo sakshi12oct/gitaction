@@ -69,7 +69,7 @@ jobs:
     - name: Deploy code to EC2
       run: |
         # Copy the artifact to EC2 instance using scp with the private key
-        scp -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ec2-user/app
+        scp -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ubuntu/app
 
         # SSH into the EC2 instance to install dependencies and start the app
         ssh -i ~/.ssh/my-key.pem ubuntu@10.0.1.207 << 'EOF'
