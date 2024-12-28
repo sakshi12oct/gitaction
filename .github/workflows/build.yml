@@ -5,22 +5,31 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
     name: Build and analyze
     runs-on: self-hosted
-    
+
     steps:
+      # Step 1: Checkout the repository
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+
+      # Step 2: Install required dependencies on the self-hosted runner
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y unzip wget  # Ensure unzip and wget are installed
+
+      # Step 3: Run SonarQube scan action
       - uses: sonarsource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
+
+      # Step 4: (Optional) Enforce Quality Gate status
+      # Uncomment if needed to enforce a Quality Gate check.
       # - uses: sonarsource/sonarqube-quality-gate-action@v1
       #   timeout-minutes: 5
       #   env:
