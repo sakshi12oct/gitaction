@@ -58,7 +58,8 @@ jobs:
         
     - name: Verify Downloaded Artifact
       run: |
-        ls -l
+        echo "Listing files after artifact download"
+        ls -al
         echo "Listing the downloaded artifact contents"
 
     - name: Set up AWS CLI
@@ -77,7 +78,8 @@ jobs:
     - name: Deploy code to EC2
       run: |
         # Verify that the artifact directory exists and list its contents
-        ls -l artifact/
+        echo "Checking if the artifact directory exists:"
+        ls -al artifact
         # Copy the artifact to EC2 instance using scp with the private key
         #scp -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ubuntu/app
         scp -v -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ubuntu/app
