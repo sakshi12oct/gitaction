@@ -27,11 +27,7 @@ jobs:
         cd code
         python -m pytest addition.py
         
-    - name: Run SonarQube analysis
-    - uses: sonarsource/sonarqube-scan-action@v4
-      env:
-          SONARQUBE_URL: ${{ secrets.SONARQUBE_URL }}
-          SONARQUBE_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+  
       
 
 
