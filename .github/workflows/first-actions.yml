@@ -36,6 +36,7 @@ jobs:
         # Copy all files except the 'artifact' directory
         #find . -maxdepth 1 ! -name 'artifact' ! -name '.git' -exec cp -r {} artifact/ \;
         echo "Packaged Python code for artifact publishing."
+        ls -l artifact  # List the contents of the artifact directory to verify
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
@@ -54,6 +55,11 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: python-code-artifact
+        
+    - name: Verify Downloaded Artifact
+      run: |
+        ls -l
+        echo "Listing the downloaded artifact contents"
 
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
@@ -70,8 +76,11 @@ jobs:
 
     - name: Deploy code to EC2
       run: |
+        # Verify that the artifact directory exists and list its contents
+        ls -l artifact/
         # Copy the artifact to EC2 instance using scp with the private key
-        scp -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ubuntu/app
+        #scp -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ubuntu/app
+        scp -v -i ~/.ssh/my-key.pem -r artifact/* ubuntu@10.0.1.207:/home/ubuntu/app
 
         # SSH into the EC2 instance to install dependencies and start the app
         ssh -i ~/.ssh/my-key.pem ubuntu@10.0.1.207 << 'EOF'
