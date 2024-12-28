@@ -83,9 +83,10 @@ jobs:
       run: |
         ssh -i ~/.ssh/my-key.pem ubuntu@10.0.1.207 << 'EOF'
           # Ensure /home/ubuntu/app directory exists
-          mkdir -p /home/ubuntu/app
+          sudo mkdir -p /home/ubuntu/app
+          sudo chown ubuntu:ubuntu /home/ubuntu/app  # Give ownership to the ubuntu user
           # Ensure it has the correct permissions
-          chmod 755 /home/ubuntu/app
+          sudo chmod 755 /home/ubuntu/app
         EOF
 
     - name: Deploy code to EC2
