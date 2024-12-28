@@ -10,7 +10,8 @@ on:
 jobs:
   build:
     name: Build and analyze
-    runs-on: self-hosted
+    runs-on: [self-hosted, Linux, X64]
+
     
     steps:
       # Step 4: Package Python code as an artifact
