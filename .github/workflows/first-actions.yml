@@ -79,6 +79,15 @@ jobs:
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > ~/.ssh/my-key.pem
         chmod 600 ~/.ssh/my-key.pem  # Set appropriate permissions for the private key
 
+    - name: Ensure target directory exists on EC2
+      run: |
+        ssh -i ~/.ssh/my-key.pem ubuntu@10.0.1.207 << 'EOF'
+          # Ensure /home/ubuntu/app directory exists
+          mkdir -p /home/ubuntu/app
+          # Ensure it has the correct permissions
+          chmod 755 /home/ubuntu/app
+        EOF
+
     - name: Deploy code to EC2
       run: |
         # Verify that the artifact directory exists and list its contents
